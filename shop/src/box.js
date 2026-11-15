@@ -405,7 +405,7 @@ class Stage {
     this.CAM.forEach((c) => c.p.sub(c.t).multiplyScalar(K).add(c.t));
     // Hero: on wide screens move in so the box fills its half instead of floating in white space.
     const k0 = MathUtils.clamp(1.6 / this.aspect, 0.7, 1);
-    this.CAM[0].p.sub(this.CAM[0].t).multiplyScalar(this.desk ? k0 : 0.82).add(this.CAM[0].t); // phones: a bit closer, the box sits below the copy
+    this.CAM[0].p.sub(this.CAM[0].t).multiplyScalar(this.desk ? k0 : 0.74).add(this.CAM[0].t); // phones: closer, the box sits between the intro text and the buttons
     this.S = [...Array(6)].map((_, i) => ({ p: V(0, REST_Y, SLOT(i)), q: new Quaternion().setFromEuler(new Euler(-PI / 2, 0, 0)) }));
     // 3: macro on the engraved logo of a knife lying in the box; the other logos recede behind it.
     const logo = (this.logoLocal || V(0.045, 0, 0)).clone().applyQuaternion(this.S[LOGO_KNIFE].q).add(this.S[LOGO_KNIFE].p);
@@ -548,7 +548,7 @@ class Stage {
     // hero box moves down below the copy, and the buy chapter's fan moves up above the buy box.
     const w6v = smooth(clamp01(1 - Math.abs(fs - 6) * 1.6));
     const shiftX = this.desk ? 0.2 * (1 - smooth(clamp01(fs))) + 0.17 * w6v : 0;
-    const shiftY = this.desk ? 0 : -0.27 * (1 - smooth(clamp01(fs))) + 0.3 * smooth(clamp01(1 - Math.abs(fs - 7) * 1.6)) - 0.27 * w6v;
+    const shiftY = this.desk ? 0 : -0.06 * (1 - smooth(clamp01(fs))) + 0.3 * smooth(clamp01(1 - Math.abs(fs - 7) * 1.6)) - 0.27 * w6v;
     if (Math.abs(shiftX) > 0.001 || Math.abs(shiftY) > 0.001) this.camera.setViewOffset(this.vw, this.vh, -shiftX * this.vw, shiftY * this.vh, this.vw, this.vh);
     else if (this.camera.view && this.camera.view.enabled) this.camera.clearViewOffset();
 
