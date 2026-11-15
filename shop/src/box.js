@@ -752,12 +752,9 @@ function init() {
   let last = performance.now();
   let fs = null;
   let lastN = -1;
-  // Hero foot (phones): buttons leave to the right (rightmost first), the trust row to the left (leftmost first).
+  // Hero foot (phones): buttons, then the trust row, left to right.
   const footMeta = document.querySelector('.intro__foot .meta');
-  const footEls = footMeta ? [
-    ...[...document.querySelectorAll('.intro__foot .actions > a')].reverse().map((el) => [el, 1]),
-    ...[...footMeta.children].map((el) => [el, -1]),
-  ] : [];
+  const footEls = footMeta ? [...document.querySelectorAll('.intro__foot .actions > a'), ...footMeta.children] : [];
   let footOn = false;
   const frame = (now) => {
     const dt = Math.min(0.05, (now - last) / 1000);
@@ -801,18 +798,19 @@ function init() {
       });
       root.classList.toggle('nav-dark', darkUnderNav);
     }
-    // Phones: on scroll the hero buttons slide out to the right and the trust row to the left, one by one.
+    // Phones: on scroll the hero buttons and the trust row soften away one by one: a short lift, a fade, a light blur.
     if (footEls.length) {
       const phone = innerWidth <= 800;
       const p = phone ? scrollY / (innerHeight * 0.3) : 0;
       if (phone || footOn) {
         footOn = phone && p > 0;
-        footEls.forEach(([el, dir], i) => {
-          const q = smooth(clamp01((p - i * 0.12) / 0.45));
-          el.style.transform = q > 0 ? `translateX(${(dir * q * innerWidth).toFixed(1)}px)` : '';
+        footEls.forEach((el, i) => {
+          const q = smooth(clamp01((p - i * 0.09) / 0.5));
+          el.style.transform = q > 0 ? `translateY(${(-q * 14).toFixed(2)}px)` : '';
           el.style.opacity = q > 0 ? (1 - q).toFixed(3) : '';
+          el.style.filter = q > 0.01 ? `blur(${(q * 5).toFixed(2)}px)` : '';
         });
-        const qm = smooth(clamp01((p - 0.24) / 0.5));
+        const qm = smooth(clamp01((p - 0.15) / 0.5));
         footMeta.style.borderTopColor = qm > 0 ? `color-mix(in srgb, var(--rule) ${((1 - qm) * 100).toFixed(1)}%, transparent)` : '';
       }
     }

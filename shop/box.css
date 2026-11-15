@@ -22,12 +22,16 @@ button { font: inherit; }
 /* Preloader */
 .loader { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; background: var(--paper); color: var(--ink); transition: opacity 0.7s ease 0.35s, visibility 0s linear 1.05s; animation: loader-out 0.7s ease 12s forwards; /* failsafe if loading stalls */ }
 .loader__in { display: flex; flex-direction: column; align-items: center; transition: transform 0.9s var(--ease), opacity 0.6s ease; }
-.loader__logo { width: min(280px, 64vw); height: auto; clip-path: inset(0 100% 0 0); animation: loader-etch 1.3s var(--ease) 0.15s forwards; }
+/* Reveal: a paper-coloured cover with a soft edge glides off the logo. Transform only, so it stays smooth
+   on the compositor while the 3D scene is loading and keeping the main thread busy. */
+.loader__mask { position: relative; display: block; overflow: hidden; }
+.loader__mask::after { content: ''; position: absolute; top: -10%; bottom: -10%; left: -30%; width: 130%; background: linear-gradient(90deg, rgba(239, 234, 226, 0) 0%, var(--paper) 23%); will-change: transform; animation: loader-wipe 1.4s cubic-bezier(0.45, 0, 0.2, 1) 0.2s forwards; }
+.loader__logo { display: block; width: min(280px, 64vw); height: auto; }
 .loader__bar { position: relative; width: 120px; height: 1px; margin-top: 34px; overflow: hidden; background: var(--rule); opacity: 0; animation: loader-fade 0.6s ease 0.9s forwards; }
 .loader__bar i { position: absolute; inset: 0; width: 40%; background: var(--gold); animation: loader-bar 1.3s ease-in-out infinite; }
 .is-ready .loader { opacity: 0; visibility: hidden; }
 .is-ready .loader__in { transform: translateY(-14px); opacity: 0; }
-@keyframes loader-etch { to { clip-path: inset(0 0 0 0); } }
+@keyframes loader-wipe { to { transform: translateX(100%); } }
 @keyframes loader-fade { to { opacity: 1; } }
 @keyframes loader-bar { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
 @keyframes loader-out { to { opacity: 0; visibility: hidden; } }
@@ -271,7 +275,7 @@ main { position: relative; z-index: 2; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .loader__logo { clip-path: none; animation: none; } .loader__bar { opacity: 1; animation: none; }
+  .loader__mask::after { display: none; } .loader__bar { opacity: 1; animation: none; }
   html { scroll-behavior: auto; }
   .fade-in { transition: none; opacity: 1; transform: none; }
 }
