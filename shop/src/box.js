@@ -707,7 +707,9 @@ function init() {
   let readyAt = 0;
   if (stage) {
     const d = canvas.dataset;
-    stage.load(d.model, d.hdr, d.hdrHd, d.marble).then(() => { readyAt = performance.now(); root.classList.add('is-ready'); }).catch(() => root.classList.add('is-ready'));
+    // Keep the preloader up long enough for its logo to finish etching in (about 1.7 s from page start).
+    const after = (fn) => setTimeout(fn, Math.max(0, 1700 - performance.now()));
+    stage.load(d.model, d.hdr, d.hdrHd, d.marble).then(() => after(() => { readyAt = performance.now(); root.classList.add('is-ready'); })).catch(() => root.classList.add('is-ready'));
   }
 
   const form = document.querySelector('[data-buy]');

@@ -19,8 +19,21 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; }
 
 .nav { position: fixed; z-index: 50; top: 0; left: 0; right: 0; height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--gx); }
+/* Preloader */
+.loader { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; background: var(--paper); color: var(--ink); transition: opacity 0.7s ease 0.35s, visibility 0s linear 1.05s; animation: loader-out 0.7s ease 12s forwards; /* failsafe if loading stalls */ }
+.loader__in { display: flex; flex-direction: column; align-items: center; transition: transform 0.9s var(--ease), opacity 0.6s ease; }
+.loader__logo { width: min(280px, 64vw); height: auto; clip-path: inset(0 100% 0 0); animation: loader-etch 1.3s var(--ease) 0.15s forwards; }
+.loader__bar { position: relative; width: 120px; height: 1px; margin-top: 34px; overflow: hidden; background: var(--rule); opacity: 0; animation: loader-fade 0.6s ease 0.9s forwards; }
+.loader__bar i { position: absolute; inset: 0; width: 40%; background: var(--gold); animation: loader-bar 1.3s ease-in-out infinite; }
+.is-ready .loader { opacity: 0; visibility: hidden; }
+.is-ready .loader__in { transform: translateY(-14px); opacity: 0; }
+@keyframes loader-etch { to { clip-path: inset(0 0 0 0); } }
+@keyframes loader-fade { to { opacity: 1; } }
+@keyframes loader-bar { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+@keyframes loader-out { to { opacity: 0; visibility: hidden; } }
 .brand { font-size: 13px; font-weight: 600; letter-spacing: 0.34em; }
-.brand sup { font-size: 0.5em; letter-spacing: 0; }
+.brand { display: flex; align-items: center; }
+.brand__logo { display: block; height: 40px; width: auto; margin-left: -6px; } /* the logo file has some air around it */
 .nav__buy { padding: 9px 20px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 13px; font-weight: 500; letter-spacing: 0.02em; transition: background 0.25s; }
 .nav__buy:hover { background: #000; }
 /* Over the dark engraving section and footer the wordmark turns light */
@@ -191,6 +204,7 @@ main { position: relative; z-index: 2; }
   .meta { justify-content: center; }
   .steps i { display: none; }
   .rail { right: 6px; }
+  .brand__logo { height: 34px; margin-left: -5px; }
   .rail a { padding: 5px 0 5px 10px; }
   .rail a.is-on i { width: 14px; }
   .rail span { font-size: 10px; }
@@ -257,6 +271,7 @@ main { position: relative; z-index: 2; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .loader__logo { clip-path: none; animation: none; } .loader__bar { opacity: 1; animation: none; }
   html { scroll-behavior: auto; }
   .fade-in { transition: none; opacity: 1; transform: none; }
 }
