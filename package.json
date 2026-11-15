@@ -1,0 +1,14 @@
+{
+  "name": "anirius-unboxing",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild shop/src/box.js --bundle --minify --format=iife --target=es2019 --outfile=shop/box.js",
+    "standalone": "npm run build && node tools/standalone-box.mjs index.html"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.0",
+    "three": "0.160.0"
+  }
+}
