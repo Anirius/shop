@@ -552,7 +552,7 @@ class Stage {
     // hero box moves down below the copy, and the buy chapter's fan moves up above the buy box.
     const w6v = smooth(clamp01(1 - Math.abs(fs - 6) * 1.6));
     const shiftX = this.desk ? 0.2 * (1 - smooth(clamp01(fs))) + 0.17 * w6v : 0;
-    const shiftY = this.desk ? 0 : -0.005 * (1 - smooth(clamp01(fs))) - 0.08 * smooth(clamp01(1 - Math.abs(fs - 1) * 1.6)) - 0.08 * smooth(clamp01(1 - Math.abs(fs - 2) * 1.6)) + 0.17 * smooth(clamp01((fs - 3.3) / 0.7)) * smooth(clamp01((5.7 - fs) / 0.7)) + 0.3 * smooth(clamp01(1 - Math.abs(fs - 7) * 1.6)) - 0.15 * w6v;
+    const shiftY = this.desk ? 0 : -0.005 * (1 - smooth(clamp01(fs))) - 0.08 * smooth(clamp01(1 - Math.abs(fs - 1) * 1.6)) - 0.08 * smooth(clamp01(1 - Math.abs(fs - 2) * 1.6)) + 0.17 * smooth(clamp01((fs - 3.3) / 0.7)) * smooth(clamp01((5.7 - fs) / 0.7)) + 0.3 * smooth(clamp01(1 - Math.abs(fs - 7) * 1.6)) - 0.22 * w6v;
     if (Math.abs(shiftX) > 0.001 || Math.abs(shiftY) > 0.001) this.camera.setViewOffset(this.vw, this.vh, -shiftX * this.vw, shiftY * this.vh, this.vw, this.vh);
     else if (this.camera.view && this.camera.view.enabled) this.camera.clearViewOffset();
 

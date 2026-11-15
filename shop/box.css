@@ -217,7 +217,13 @@ main { position: relative; z-index: 2; }
   .copy--buy .hl { font-size: 34px; }
   .copy--buy .rating { font-size: 14px; }
   /* Slide 07 on phones: kicker, headline, one row (stars + clip). No sub line, no press list. */
-  .copy--tv .wide, .copy--tv .sub, .copy--tv .press { display: none; }
+  .copy--tv .wide { display: none; }
+  /* Slide 07 on phones: headline, one line of context, stars + clip, then the press list in its own ruled block */
+  .copy--tv .sub { margin-top: 12px; font-size: 15px; }
+  .copy--tv .count { color: var(--dim); letter-spacing: 0; }
+  .copy--tv .press { margin-top: 22px; padding-top: 14px; font-size: 11px; line-height: 1.9; letter-spacing: 0.12em; }
+  .copy--tv br.narrow { display: inline; }
+  .press__label { display: block !important; margin-bottom: 4px; font-size: 10.5px; font-weight: 600; letter-spacing: 0.2em; color: var(--gold); }
   [data-ch] .kicker { display: none; } /* phones: no small gold labels above the slide headlines */
   .copy--tv .narrow { display: inline; }
   .tv__row { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 20px; }
@@ -237,7 +243,16 @@ main { position: relative; z-index: 2; }
   .engrave__in { gap: 32px; }
   .engrave__form { flex-direction: column; border-radius: 22px; padding: 8px; }
   .engrave__form input { padding: 12px 12px; }
-  .engrave__facts li { padding: 0 14px; }
+  /* Engraving on phones: centred like the story slides, facts as an even 3-column row */
+  .engrave__copy { text-align: center; }
+  .engrave .hl { font-size: 40px; }
+  .engrave .sub { margin: 16px auto 0; font-size: 16px; }
+  .engrave__form { max-width: none; margin-top: 28px; }
+  .engrave__form input { text-align: center; padding: 14px 12px; }
+  .engrave .cta { padding: 15px 28px; }
+  .engrave__facts { display: grid; grid-template-columns: repeat(3, 1fr); margin: 28px 0 24px; }
+  .engrave__facts li { padding: 0 6px; font-size: 12px; text-align: center; align-items: center; }
+  .engrave__facts li:first-child { padding-left: 6px; }
   .faq { padding: 10vh var(--gx) 12vh; gap: 20px; }
 }
 
