@@ -757,6 +757,15 @@ function init() {
       stepName.textContent = chapters[n].dataset.name;
     }
     const covered = buy.getBoundingClientRect().top;
+    // Light wordmark while a dark section (engraving ad, footer) sits under the top bar.
+    {
+      const darkUnderNav = [document.querySelector('.engrave'), document.querySelector('.foot')].some((el) => {
+        if (!el) return false;
+        const r = el.getBoundingClientRect();
+        return r.top < 40 && r.bottom > 20;
+      });
+      root.classList.toggle('nav-dark', darkUnderNav);
+    }
     // Hide the step index once the buy box is up (on phones it sits right where the box is).
     steps.style.setProperty('--so', covered < innerHeight * 0.85 || (innerWidth <= 800 && fs > 6.5) ? 0 : 1);
 
