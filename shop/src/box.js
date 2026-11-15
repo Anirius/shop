@@ -406,6 +406,10 @@ class Stage {
     // Hero: on wide screens move in so the box fills its half instead of floating in white space.
     const k0 = MathUtils.clamp(1.6 / this.aspect, 0.7, 1);
     this.CAM[0].p.sub(this.CAM[0].t).multiplyScalar(this.desk ? k0 : 0.74).add(this.CAM[0].t); // phones: closer, the box sits between the intro text and the buttons
+    // Phones, slide 02: closer and higher, a 3/4 view like the hero, so the box fills the width and
+    // the lifted lid shows its logo.
+    if (!this.desk) this.CAM[1] = { p: V(0.22, 0.56, 0.48), t: V(0, 0.06, 0) };
+    if (!this.desk) this.CAM[2] = { p: V(0.19, 0.68, 0.35), t: V(0, 0.0, 0.0) }; // slide 03: same side, higher, looking into the box
     this.S = [...Array(6)].map((_, i) => ({ p: V(0, REST_Y, SLOT(i)), q: new Quaternion().setFromEuler(new Euler(-PI / 2, 0, 0)) }));
     // 3: macro on the engraved logo of a knife lying in the box; the other logos recede behind it.
     const logo = (this.logoLocal || V(0.045, 0, 0)).clone().applyQuaternion(this.S[LOGO_KNIFE].q).add(this.S[LOGO_KNIFE].p);
@@ -548,7 +552,7 @@ class Stage {
     // hero box moves down below the copy, and the buy chapter's fan moves up above the buy box.
     const w6v = smooth(clamp01(1 - Math.abs(fs - 6) * 1.6));
     const shiftX = this.desk ? 0.2 * (1 - smooth(clamp01(fs))) + 0.17 * w6v : 0;
-    const shiftY = this.desk ? 0 : -0.06 * (1 - smooth(clamp01(fs))) + 0.3 * smooth(clamp01(1 - Math.abs(fs - 7) * 1.6)) - 0.27 * w6v;
+    const shiftY = this.desk ? 0 : -0.005 * (1 - smooth(clamp01(fs))) - 0.08 * smooth(clamp01(1 - Math.abs(fs - 1) * 1.6)) - 0.08 * smooth(clamp01(1 - Math.abs(fs - 2) * 1.6)) + 0.17 * smooth(clamp01((fs - 3.3) / 0.7)) * smooth(clamp01((5.7 - fs) / 0.7)) + 0.3 * smooth(clamp01(1 - Math.abs(fs - 7) * 1.6)) - 0.15 * w6v;
     if (Math.abs(shiftX) > 0.001 || Math.abs(shiftY) > 0.001) this.camera.setViewOffset(this.vw, this.vh, -shiftX * this.vw, shiftY * this.vh, this.vw, this.vh);
     else if (this.camera.view && this.camera.view.enabled) this.camera.clearViewOffset();
 
@@ -662,6 +666,27 @@ function init() {
   // First opaque section after the story: once it covers the screen, stop rendering the 3D stage.
   const buy = document.querySelector('.engrave') || document.querySelector('.faq');
   const steps = document.querySelector('.steps');
+  // Side rail: a dot per chapter; tap to jump to the middle of that chapter.
+  const rail = document.querySelector('.rail');
+  const railDots = chapters.map((ch, i) => {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.setAttribute('aria-label', ch.dataset.name);
+    a.innerHTML = `<span>${ch.dataset.name}</span><i></i>`;
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const y = i === 0 ? 0 : ch.offsetTop + ch.offsetHeight / 2 - innerHeight / 2;
+      scrollTo({ top: y, behavior: reduced ? 'auto' : 'smooth' });
+    });
+    rail.appendChild(a);
+    return a;
+  });
+  let railT = 0;
+  addEventListener('scroll', () => {
+    rail.classList.add('is-moving');
+    clearTimeout(railT);
+    railT = setTimeout(() => rail.classList.remove('is-moving'), 1200);
+  }, { passive: true });
   const stepN = document.querySelector('[data-step]');
   const stepName = document.querySelector('[data-step-name]');
 
@@ -725,6 +750,13 @@ function init() {
   let last = performance.now();
   let fs = null;
   let lastN = -1;
+  // Hero foot (phones): buttons leave to the right (rightmost first), the trust row to the left (leftmost first).
+  const footMeta = document.querySelector('.intro__foot .meta');
+  const footEls = footMeta ? [
+    ...[...document.querySelectorAll('.intro__foot .actions > a')].reverse().map((el) => [el, 1]),
+    ...[...footMeta.children].map((el) => [el, -1]),
+  ] : [];
+  let footOn = false;
   const frame = (now) => {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
@@ -755,6 +787,7 @@ function init() {
       lastN = n;
       stepN.textContent = String(n + 1).padStart(2, '0');
       stepName.textContent = chapters[n].dataset.name;
+      railDots.forEach((d, i) => d.classList.toggle('is-on', i === n));
     }
     const covered = buy.getBoundingClientRect().top;
     // Light wordmark while a dark section (engraving ad, footer) sits under the top bar.
@@ -766,8 +799,24 @@ function init() {
       });
       root.classList.toggle('nav-dark', darkUnderNav);
     }
+    // Phones: on scroll the hero buttons slide out to the right and the trust row to the left, one by one.
+    if (footEls.length) {
+      const phone = innerWidth <= 800;
+      const p = phone ? scrollY / (innerHeight * 0.3) : 0;
+      if (phone || footOn) {
+        footOn = phone && p > 0;
+        footEls.forEach(([el, dir], i) => {
+          const q = smooth(clamp01((p - i * 0.12) / 0.45));
+          el.style.transform = q > 0 ? `translateX(${(dir * q * innerWidth).toFixed(1)}px)` : '';
+          el.style.opacity = q > 0 ? (1 - q).toFixed(3) : '';
+        });
+        const qm = smooth(clamp01((p - 0.24) / 0.5));
+        footMeta.style.borderTopColor = qm > 0 ? `color-mix(in srgb, var(--rule) ${((1 - qm) * 100).toFixed(1)}%, transparent)` : '';
+      }
+    }
     // Hide the step index once the buy box is up (on phones it sits right where the box is).
     steps.style.setProperty('--so', covered < innerHeight * 0.85 || (innerWidth <= 800 && fs > 6.5) ? 0 : 1);
+    rail.style.setProperty('--so', steps.style.getPropertyValue('--so'));
 
     if (stage && readyAt && covered > 0) stage.update(fs, now, reduced ? 1 : clamp01((now - readyAt) / 2200));
     requestAnimationFrame(frame);

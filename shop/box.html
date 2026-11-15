@@ -13,7 +13,7 @@
 <body>
 <header class="nav">
   <a class="brand" href="#top">ANIRIUS<sup>®</sup></a>
-  <a class="nav__buy" href="#kaufen">Kaufen · 39,95 €</a>
+  <a class="nav__buy" href="#kaufen">Kaufen</a>
 </header>
 
 <canvas class="stage" aria-hidden="true"
@@ -26,6 +26,7 @@
 <div class="veil" aria-hidden="true"></div>
 
 <!-- Step index, bottom left -->
+<nav class="rail" aria-label="Kapitel"></nav>
 <div class="steps" aria-hidden="true"><b data-step>01</b><span>/ 08</span><i data-step-name>Die Box</i></div>
 
 <main id="top">
@@ -37,7 +38,7 @@
       <!-- Phones: this block moves to the bottom of the screen, under the box -->
       <div class="intro__foot">
         <div class="actions fade-in">
-          <a class="cta" href="#kaufen">Jetzt kaufen · 39,95 €</a>
+          <a class="cta" href="#kaufen">Jetzt kaufen</a>
           <a class="ghost" href="#unbox">Box öffnen <span aria-hidden="true">↓</span></a>
         </div>
         <ul class="meta fade-in">
@@ -73,7 +74,7 @@
     </div></div>
   </section>
 
-  <section class="ch ch--long" data-ch="4" data-name="Messer 1">
+  <section class="ch ch--long" data-ch="4" data-name="Fein">
     <div class="ch__pin"><div class="copy">
       <p class="kicker">Messer 1 von 6 · Oben</p>
       <h2 class="hl"><em>Fein.</em></h2>
@@ -81,7 +82,7 @@
     </div></div>
   </section>
 
-  <section class="ch ch--long" data-ch="5" data-name="Messer 2">
+  <section class="ch ch--long" data-ch="5" data-name="Grob">
     <div class="ch__pin"><div class="copy">
       <p class="kicker">Messer 2 von 6 · Unten</p>
       <h2 class="hl">Grob.</h2>
@@ -91,11 +92,14 @@
 
   <section class="ch" data-ch="6" data-name="Die Löwen">
     <div class="ch__pin"><div class="copy copy--tv">
-      <p class="kicker">VOX · Die Höhle der Löwen · Staffel 19</p>
+      <p class="kicker">VOX · Die Höhle der Löwen<span class="wide"> · Staffel 19</span></p>
       <h2 class="hl">Die Löwen haben&rsquo;s <em>getestet.</em></h2>
       <p class="sub">Vorgestellt in der Gründershow auf VOX.</p>
-      <p class="rating"><span>★★★★★</span> 4,4 von 5 · 84 Bewertungen</p>
-      <a class="watch" href="https://anirius.de/" target="_blank" rel="noopener"><span class="watch__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>Original-Ausschnitt ansehen</a>
+      <!-- Phones: stars and the clip button share one row -->
+      <div class="tv__row">
+        <p class="rating"><span>★★★★★</span> 4,4<span class="wide"> von 5 · 84 Bewertungen</span><span class="narrow"> (84)</span></p>
+        <a class="watch" href="https://anirius.de/" target="_blank" rel="noopener"><span class="watch__btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><span class="wide">Original-Ausschnitt ansehen</span><span class="narrow">Ausschnitt</span></a>
+      </div>
       <p class="press">VOX · RTL+ · Schwäbische Zeitung · deutsche-startups.de · LEADERSNET</p>
     </div></div>
   </section>

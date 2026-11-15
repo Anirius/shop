@@ -35,6 +35,15 @@ main { position: relative; z-index: 2; }
   background: linear-gradient(90deg, rgba(239, 234, 226, 0.82) 0%, rgba(239, 234, 226, 0.66) 24%, rgba(239, 234, 226, 0.25) 36%, rgba(239, 234, 226, 0) 46%); }
 
 .steps { position: fixed; z-index: 3; left: var(--gx); bottom: 26px; display: flex; align-items: baseline; gap: 10px; font-size: 12px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); opacity: var(--so, 1); transition: opacity 0.4s; }
+/* Side rail: one dot per chapter, the current one stretches into a gold line with its name */
+.rail { position: fixed; z-index: 4; right: 18px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-end; opacity: var(--so, 1); transition: opacity 0.4s; }
+.rail a { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 6px 0 6px 12px; pointer-events: auto; }
+.rail i { display: block; width: 6px; height: 6px; border-radius: 3px; background: var(--ink); opacity: 0.32; box-shadow: 0 0 0 2px rgba(242, 239, 233, 0.75); /* halo: readable over the dark knife and box too */ transition: width 0.45s var(--ease), background 0.3s, opacity 0.3s; }
+.rail span { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); padding: 4px 9px; border-radius: 999px; background: rgba(242, 239, 233, 0.92); white-space: nowrap; opacity: 0; transform: translateX(6px); transition: opacity 0.3s, transform 0.3s var(--ease); pointer-events: none; }
+.rail a:hover i { opacity: 0.6; }
+.rail a:hover span { opacity: 0.55; transform: none; }
+.rail a.is-on i { width: 26px; background: var(--gold); opacity: 1; }
+.rail a.is-on span { opacity: 1; transform: none; }
 .steps b { color: var(--ink); font-weight: 600; }
 .steps i { font-style: normal; margin-left: 14px; padding-left: 14px; border-left: 1px solid var(--rule); }
 
@@ -98,6 +107,7 @@ main { position: relative; z-index: 2; }
 .rating span { color: var(--gold); letter-spacing: 2px; }
 /* Slide 07: TV moment */
 .copy--tv .rating { margin-top: 18px; }
+.narrow { display: none; }
 .watch { display: inline-flex; align-items: center; gap: 12px; margin-top: 24px; font-size: 16px; font-weight: 500; }
 .watch__btn { width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-items: center; transition: transform 0.25s var(--ease), background 0.25s; }
 .watch__btn svg { width: 14px; height: 14px; fill: currentColor; margin-left: 2px; }
@@ -180,10 +190,16 @@ main { position: relative; z-index: 2; }
   .actions { justify-content: center; }
   .meta { justify-content: center; }
   .steps i { display: none; }
+  .rail { right: 6px; }
+  .rail a { padding: 5px 0 5px 10px; }
+  .rail a.is-on i { width: 14px; }
+  .rail span { font-size: 10px; }
+  .rail:not(.is-moving) a.is-on span { opacity: 0; transform: translateX(6px); } /* phones: the name shows only while scrolling */
   .veil { background: linear-gradient(180deg, rgba(239, 234, 226, 0.85) 0%, rgba(239, 234, 226, 0.7) 30%, rgba(239, 234, 226, 0) 50%); }
   .buy__in, .faq { grid-template-columns: 1fr; }
   /* Hero on phones: title + intro on top, the box in the middle, buttons + trust row at the bottom */
   .copy--intro { position: static; transform: none; will-change: auto; } /* so the foot anchors to the screen, not the text block */
+  .ch .copy--intro::before { inset: auto; top: 40px; left: -60px; right: -60px; height: 340px; } /* glow only behind the text, not over the box */
   .intro__foot { position: absolute; left: var(--gx); right: var(--gx); bottom: 62px; }
   .intro__foot .actions { margin-top: 0; }
   .intro__foot .meta { margin-top: 18px; }
@@ -200,6 +216,16 @@ main { position: relative; z-index: 2; }
   .ch--buy .ch__pin { align-items: flex-end; padding-top: 0; padding-bottom: 14px; }
   .copy--buy .hl { font-size: 34px; }
   .copy--buy .rating { font-size: 14px; }
+  /* Slide 07 on phones: kicker, headline, one row (stars + clip). No sub line, no press list. */
+  .copy--tv .wide, .copy--tv .sub, .copy--tv .press { display: none; }
+  [data-ch] .kicker { display: none; } /* phones: no small gold labels above the slide headlines */
+  .copy--tv .narrow { display: inline; }
+  .tv__row { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 20px; }
+  .tv__row .rating span { letter-spacing: 1px; }
+  .tv__row .rating, .tv__row .watch { margin: 0; white-space: nowrap; }
+  .tv__row .rating { font-size: 15px; color: var(--ink); font-weight: 500; }
+  .tv__row .watch { gap: 10px; font-size: 15px; }
+  .tv__row .watch__btn { width: 34px; height: 34px; }
   .copy--buy .pick { margin-top: 14px; gap: 8px; }
   .copy--buy .opt__in { padding: 12px 16px; }
   .copy--buy .opt__list { display: none; }
